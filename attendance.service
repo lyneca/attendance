@@ -1,0 +1,8 @@
+[Unit]
+Description="Attendance Bot"
+
+[Service]
+ExecStart="python3 /home/pi/attendance/main.py"
+
+[Install]
+WantedBy=default.target
