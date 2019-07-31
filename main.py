@@ -28,6 +28,7 @@ from logger import *
 
 def main():
     """Main setup and loop"""
+    logger.info("Initialising reader")
     config = Config(sys.argv[1])
     config.update_config()
     scanner = Scanner()
