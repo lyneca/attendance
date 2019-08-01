@@ -1,4 +1,5 @@
 from logger import *
+import requests
 
 class Config:
     def __init__(self):
@@ -9,5 +10,9 @@ class Config:
         self.access_token = ""
 
     def update_config(self):
-        # TODO Get data from Firebase; encrypted?
+        """Pull config data from Firebase"""
+        requests.post(
+            "https://us-central1-usyd-attendance.cloudfunctions.net/getConfig",
+            { "bot_id": self.bot_id }
+        )
         return True
