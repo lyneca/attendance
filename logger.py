@@ -1,4 +1,4 @@
-def print_prefix(self, code, *msg):
+def print_prefix(code, *msg):
     """Print a message with a prefix"""
     print("[{: >4}]".format(code), *msg)
 
