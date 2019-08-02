@@ -1,5 +1,4 @@
 import requests
-import firebase_admin
 
 class Config:
     def __init__(self, logger):
