@@ -27,18 +27,18 @@ class Scanner:
             self.logger.error("Could not request tag")
             buzzer.error()
             return True, None
-        self.logger.info("Tag found")
+        self.logger.silly("Tag found")
         (error, uid) = self.rdr.anticoll()
         if error:
             self.logger.error("Error in anticollision")
             buzzer.error()
             return True, None
-        self.logger.info("UID:", uid)
+        self.logger.silly("UID:", uid)
         if self.rdr.select_tag(uid):
             self.logger.error("Could not select tag")
             buzzer.error()
             return True, None
-        self.logger.info("Selected tag")
+        self.logger.silly("Selected tag")
         if key is None:
             return self.rdr.read(sector)
         if self.rdr.card_auth(self.rdr.auth_a, sector, key, uid):
@@ -46,7 +46,7 @@ class Scanner:
             buzzer.error()
             self.rdr.stop_crypto()
             return True, None
-        self.logger.info("Authenticated")
+        self.logger.silly("Authenticated")
         return self.rdr.read(sector)
 
     def scan(self):
@@ -59,7 +59,7 @@ class Scanner:
         if error:
             return None
         sid = ''.join([chr(x) for x in data]).strip()
-        self.logger.info("SID:", sid)
+        self.logger.info("Found SID:", sid)
         if sid and (sid != self.last_sid or time.time() - self.last_time > 3):
             self.last_sid = sid
             self.last_time = time.time()
