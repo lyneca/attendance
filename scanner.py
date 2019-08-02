@@ -60,9 +60,9 @@ class Scanner:
             return None
         sid = ''.join([chr(x) for x in data]).strip()
         logger.info("SID:", sid)
-        if sid and sid != last_sid or time.time() - last_time > 3:
-            last_sid = sid
-            last_time = time.time()
+        if sid and sid != self.last_sid or time.time() - self.last_time > 3:
+            self.last_sid = sid
+            self.last_time = time.time()
             self.rdr.stop_crypto()
             return sid
         logger.error("Scan collision")
