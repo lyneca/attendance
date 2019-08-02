@@ -1,6 +1,5 @@
 import time
 
-import logger
 import buzzer
 
 try:
@@ -12,8 +11,9 @@ USYD_KEY = []
 
 class Scanner:
     """Class for interacting with the RFID reader"""
-    def __init__(self):
+    def __init__(self, logger):
         self.rdr = RFID()
+        self.logger = logger
         self.util = self.rdr.util()
         self.util.debug = True
         self.last_sid = 0
@@ -24,29 +24,29 @@ class Scanner:
         self.rdr.wait_for_tag()
         (error, _) = self.rdr.request()
         if error:
-            logger.error("Could not request tag")
+            self.logger.error("Could not request tag")
             buzzer.error()
             return True, None
-        logger.info("Tag found")
+        self.logger.info("Tag found")
         (error, uid) = self.rdr.anticoll()
         if error:
-            logger.error("Error in anticollision")
+            self.logger.error("Error in anticollision")
             buzzer.error()
             return True, None
-        logger.info("UID:", uid)
+        self.logger.info("UID:", uid)
         if self.rdr.select_tag(uid):
-            logger.error("Could not select tag")
+            self.logger.error("Could not select tag")
             buzzer.error()
             return True, None
-        logger.info("Selected tag")
+        self.logger.info("Selected tag")
         if key is None:
             return self.rdr.read(sector)
         if self.rdr.card_auth(self.rdr.auth_a, sector, key, uid):
-            logger.error("Could not authenticate")
+            self.logger.error("Could not authenticate")
             buzzer.error()
             self.rdr.stop_crypto()
             return True, None
-        logger.info("Authenticated")
+        self.logger.info("Authenticated")
         return self.rdr.read(sector)
 
     def scan(self):
@@ -59,11 +59,11 @@ class Scanner:
         if error:
             return None
         sid = ''.join([chr(x) for x in data]).strip()
-        logger.info("SID:", sid)
+        self.logger.info("SID:", sid)
         if sid and (sid != self.last_sid or time.time() - self.last_time > 3):
             self.last_sid = sid
             self.last_time = time.time()
             self.rdr.stop_crypto()
             return sid
-        logger.error("Scan collision")
+        self.logger.error("Scan collision")
         buzzer.error()

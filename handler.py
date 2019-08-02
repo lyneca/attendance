@@ -1,11 +1,11 @@
 import requests
 import time
-import logger
 from datetime import datetime
 
 class Handler:
-    def __init__(self, config):
+    def __init__(self, logger, config):
         self.config = config
+        self.logger = logger
         self.assignments = None
 
     def get_headers(self):
@@ -23,15 +23,15 @@ class Handler:
         """Attempt to request the list of attendance assignments"""
         while True:
             try:
-                logger.info("Getting list of assignments")
+                self.logger.info("Getting list of assignments")
                 self.assignments = self.get("/courses/{}/assignments?per_page=50".format(
                     self.config.course)).json()
                 break
             except requests.exceptions.ConnectionError:
-                logger.error("Could not connect to Canvas")
+                self.logger.error("Could not connect to Canvas")
                 time.sleep(3)
                 continue
-        logger.info("Successfully requested assignment list")
+        self.logger.info("Successfully requested assignment list")
 
     def get_aid(self):
         """Get the assignment corresponding to this date"""
@@ -45,14 +45,14 @@ class Handler:
             and date == x["due_at"].split("T")[0]
         ]
         if aids:
-            logger.info("Got AID:", aids[0]["id"])
+            self.logger.info("Got AID:", aids[0]["id"])
             return aids[0]["id"]
         return None
 
     def send(self, sid):
         """Attempt to send scanned card data to Canvas"""
         aid = self.get_aid()
-        logger.info("Sending", sid)
+        self.logger.info("Sending", sid)
 
         if aid:
             url = self.config.server + \
@@ -62,9 +62,9 @@ class Handler:
             response = requests.put(
                 url, "submission[posted_grade]=1", headers=self.get_headers())
             if response.ok:
-                logger.info("Sent")
+                self.logger.info("Sent")
             else:
-                logger.error(response.status_code, response.reason)
+                self.logger.error(response.status_code, response.reason)
                 print(response.content)
         else:
-            logger.error("No assignment found.")
+            self.logger.error("No assignment found.")

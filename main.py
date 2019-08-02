@@ -29,16 +29,17 @@ import sys
 from scanner import Scanner
 from handler import Handler
 from config import Config
-import logger
+from logger import Logger
 
 
 def main():
     """Main setup and loop"""
+    logger = Logger(1)
     logger.info("Initialising reader")
-    config = Config()
+    config = Config(logger)
     config.update_config()
-    scanner = Scanner()
-    handler = Handler(config)
+    scanner = Scanner(logger)
+    handler = Handler(logger, config)
     handler.get_assignments()
     while True:
         data = scanner.scan()
