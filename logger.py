@@ -30,5 +30,4 @@ class Logger:
         """Log an error message"""
         if self.level > 3:
             return
-        self.buzzer.error()
         print_prefix("ERR", *msg)

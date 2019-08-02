@@ -9,12 +9,6 @@
 3. Sending
   - Asynchronous
 
-Modules
-
-- Configuration
-- Scanner
-- Handler
-
 Error Codes
 
 - Setup
@@ -24,7 +18,7 @@ Error Codes
 
 """
 
-import sys
+from time import sleep
 
 from scanner import Scanner
 from handler import Handler
@@ -37,12 +31,25 @@ def main():
     """Main setup and loop"""
     buzzer = Buzzer()
     logger = Logger(buzzer, 1)
+
     logger.info("Initialising reader")
+
     config = Config(logger)
-    config.update_config()
+
+    err = True
+    while err:
+        err = config.update_config()
+        sleep(3)
+
     scanner = Scanner(logger)
+
     handler = Handler(logger, config)
     handler.get_assignments()
+
+    buzzer.setup_complete()
+
+    logger.info("Ready")
+
     while True:
         data = scanner.scan()
         if data is None:
