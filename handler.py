@@ -39,7 +39,9 @@ class Handler:
             return None
         date = datetime.now().isoformat().split("T")[0]
         aids = [
-            x for x in self.assignments if x["name"].startswith("Attendance")
+            x for x in self.assignments if "attendance" in x["name"].lower()
+            and "due_at" in x
+            and x["due_at"] is not None
             and date == x["due_at"].split("T")[0]
         ]
         if aids:
