@@ -1,5 +1,5 @@
 def print_prefix(code, *msg):
-    print(f"[{code: >5}]", *msg)
+    print("[{: >5}]".format(code), *msg)
 
 def info(*msg):
     """Log an info message"""
