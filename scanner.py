@@ -1,7 +1,5 @@
 import time
 
-import buzzer
-
 try:
     from pirc522 import RFID
 except ImportError:
@@ -24,26 +22,22 @@ class Scanner:
         self.rdr.wait_for_tag()
         (error, _) = self.rdr.request()
         if error:
-            self.logger.error("Could not request tag")
-            buzzer.error()
+            self.logger.warn("Could not request tag")
             return True, None
         self.logger.silly("Tag found")
         (error, uid) = self.rdr.anticoll()
         if error:
-            self.logger.error("Error in anticollision")
-            buzzer.error()
+            self.logger.warn("Error in anticollision")
             return True, None
         self.logger.silly("UID:", uid)
         if self.rdr.select_tag(uid):
-            self.logger.error("Could not select tag")
-            buzzer.error()
+            self.logger.warn("Could not select tag")
             return True, None
         self.logger.silly("Selected tag")
         if key is None:
             return self.rdr.read(sector)
         if self.rdr.card_auth(self.rdr.auth_a, sector, key, uid):
-            self.logger.error("Could not authenticate")
-            buzzer.error()
+            self.logger.warn("Could not authenticate")
             self.rdr.stop_crypto()
             return True, None
         self.logger.silly("Authenticated")
@@ -64,6 +58,6 @@ class Scanner:
             self.last_sid = sid
             self.last_time = time.time()
             self.rdr.stop_crypto()
+            self.logger.buzzer.success()
             return sid
-        self.logger.error("Scan collision")
-        buzzer.error()
+        self.logger.warn("Scan collision")

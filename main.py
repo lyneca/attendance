@@ -30,11 +30,13 @@ from scanner import Scanner
 from handler import Handler
 from config import Config
 from logger import Logger
+from buzzer import Buzzer
 
 
 def main():
     """Main setup and loop"""
-    logger = Logger(1)
+    buzzer = Buzzer()
+    logger = Logger(buzzer, 1)
     logger.info("Initialising reader")
     config = Config(logger)
     config.update_config()

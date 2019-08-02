@@ -1,4 +1,5 @@
 import requests
+import json
 
 class Config:
     def __init__(self, logger):
@@ -14,15 +15,28 @@ class Config:
     def update_config(self):
         """Pull config data from Firebase"""
         self.logger.info("Pulling config from Firebase")
-        response = requests.post(
-            "https://us-central1-usyd-attendance.cloudfunctions.net/getConfig",
-            {
-                "secret": self.firebase_secret,
-                "bot_id": self.bot_id
-            }
-        )
-        config = response.json()['config']
-        self.server = config['server']
-        self.course = config['course']
-        self.access_token = config['token']
-        return True
+        try:
+            response = requests.post(
+                "https://us-central1-usyd-attendance.cloudfunctions.net/getConfig",
+                {
+                    "secret": self.firebase_secret,
+                    "bot_id": self.bot_id
+                }
+            )
+            config = response.json()['config']
+            self.server = config['server']
+            self.course = config['course']
+            self.access_token = config['token']
+        except ConnectionError as err:
+            self.logger.buzzer.setup_error()
+            self.logger.error("Could not connect to server:", err)
+            return True
+        except KeyError as err:
+            self.logger.buzzer.setup_error()
+            self.logger.error("Could not obtain setup data:", err)
+            return True
+        except json.JSONDecodeError as err:
+            self.logger.buzzer.setup_error()
+            self.logger.error("Invalid response from Firebase:", err)
+            return True
+        return False
