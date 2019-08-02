@@ -26,18 +26,18 @@ class Scanner:
         if error:
             logger.error("Could not request tag")
             buzzer.error()
-            return None
+            return True, None
         logger.info("Tag found")
         (error, uid) = self.rdr.anticoll()
         if error:
             logger.error("Error in anticollision")
             buzzer.error()
-            return None
+            return True, None
         logger.info("UID:", uid)
         if self.rdr.select_tag(uid):
             logger.error("Could not select tag")
             buzzer.error()
-            return None
+            return True, None
         logger.info("Selected tag")
         if key is None:
             return self.rdr.read(sector)
@@ -45,7 +45,7 @@ class Scanner:
             logger.error("Could not authenticate")
             buzzer.error()
             self.rdr.stop_crypto()
-            return None
+            return True, None
         logger.info("Authenticated")
         return self.rdr.read(sector)
 
@@ -55,7 +55,9 @@ class Scanner:
         Returns None if no card can be scanned.
         """
 
-        data = self.scan_card(USYD_KEY, 12)
+        error, data = self.scan_card(USYD_KEY, 12)
+        if error:
+            return None
         sid = ''.join([chr(x) for x in data]).strip()
         logger.info("SID:", sid)
         if sid and sid != last_sid or time.time() - last_time > 3:
