@@ -1,4 +1,4 @@
-from logger import *
+import logger
 import requests
 
 class Config:
@@ -11,6 +11,7 @@ class Config:
 
     def update_config(self):
         """Pull config data from Firebase"""
+        logger.info("Pulling config from Firebase")
         requests.post(
             "https://us-central1-usyd-attendance.cloudfunctions.net/getConfig",
             { "bot_id": self.bot_id }
