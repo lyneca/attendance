@@ -18,6 +18,6 @@ class Config:
         ).json()
         config = response['config']
         self.server = config['server']
-        self.course = config['server']
-        self.access_token = config['server']
+        self.course = config['course']
+        self.access_token = config['token']
         return True
