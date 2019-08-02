@@ -21,9 +21,7 @@ class Config:
                 "bot_id": self.bot_id
             }
         )
-        print(response.body)
-        response = response.json()
-        config = response['config']
+        config = response.json()['config']
         self.server = config['server']
         self.course = config['course']
         self.access_token = config['token']
