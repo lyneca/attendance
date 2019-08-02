@@ -39,6 +39,7 @@ def main():
     config.update_config()
     scanner = Scanner()
     handler = Handler(config)
+    handler.get_assignments()
     while True:
         data = scanner.scan()
         if data is None:
