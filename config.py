@@ -5,7 +5,7 @@ class Config:
         with open("/home/pi/id") as id_file:
             self.bot_id = int(id_file.read())
         with open("/home/pi/secret") as secret_file:
-            self.firebase_secret = secret_file.read()
+            self.firebase_secret = secret_file.read().strip()
         self.logger = logger
         self.server = ""
         self.course = ""
@@ -20,7 +20,9 @@ class Config:
                 "secret": self.firebase_secret,
                 "bot_id": self.bot_id
             }
-        ).json()
+        )
+        print(response.body)
+        response = response.json()
         config = response['config']
         self.server = config['server']
         self.course = config['course']
