@@ -37,7 +37,8 @@ class Handler:
         """Get the assignment corresponding to this date"""
         if not self.assignments:
             return None
-        date = datetime.now().isoformat().split("T")[0]
+        #  date = datetime.now().isoformat().split("T")[0]
+        date = "2019-08-06"
         aids = [
             x for x in self.assignments if "attendance" in x["name"].lower()
             and "due_at" in x
