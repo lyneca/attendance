@@ -27,7 +27,7 @@ class Config:
             self.server = config['server']
             self.course = config['course']
             self.access_token = config['token']
-        except ConnectionError as err:
+        except requests.exceptions.ConnectionError as err:
             self.logger.buzzer.setup_error()
             self.logger.error("Could not connect to server:", err)
             return True
