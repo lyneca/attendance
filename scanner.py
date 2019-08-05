@@ -5,11 +5,11 @@ try:
 except ImportError:
     print("Cannot find library.")
 
-USYD_KEY = []
-
 class Scanner:
     """Class for interacting with the RFID reader"""
     def __init__(self, logger):
+        with open("/home/pi/usyd_key") as key_file:
+            self.key = [ord(x) for x in key_file.read().strip()]
         self.rdr = RFID()
         self.logger = logger
         self.util = self.rdr.util()
@@ -49,7 +49,7 @@ class Scanner:
         Returns None if no card can be scanned.
         """
 
-        error, data = self.scan_card(USYD_KEY, 12)
+        error, data = self.scan_card(self.key, 12)
         if error:
             return None
         sid = ''.join([chr(x) for x in data]).strip()
