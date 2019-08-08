@@ -108,6 +108,7 @@ class Scanner:
         else:
             if not self.has_config:
                 self.logger.buzzer.setup_error()
+                time.sleep(1)
                 return None
             sid = self.scan_sid(uid)
             self.logger.info("Found SID:", sid)
