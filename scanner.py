@@ -49,7 +49,7 @@ class Scanner:
             return True, None
         self.logger.silly("Authenticated")
         err, data = self.rdr.read(12)
-        return self.decode(data).strip()
+        return False, self.decode(data).strip()
 
     def is_config_card(self, uid):
         if self.rdr.card_auth(self.rdr.auth_b, 1, self.config_key, uid):
