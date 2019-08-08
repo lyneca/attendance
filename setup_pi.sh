@@ -15,6 +15,9 @@ run "sed -i '10aexport TERM=xterm\n' .bashrc"
 echo ":: Installing libraries..."
 run "sudo apt install -qy python3-requests python3-pip python3-rpi.gpio git neovim"
 
+echo "Installing python libraries..."
+run "sudo pip3 install pi-rc522"
+
 echo ":: Enabling SPI interface..."
 run "sudo raspi-config"
 
