@@ -21,11 +21,13 @@ token_a = hex(int(token_a))[2:]
 
 blocks = [
     None,
-    hexize(f'{course_code: >8}{course_id:\0<4}{token_a:\0<4}'),
-    hexize(token_b[:16]),
+    hexize(f'{"CONFIG CARD": <16}'),
+    hexize(f'{course_code: >8}{course_id:0>4}{token_a:0>4}'),
     None,
+    hexize(token_b[:16]),
     hexize(token_b[16:32]),
     hexize(token_b[32:48]),
+    None,
     hexize(token_b[48:])
 ]
 

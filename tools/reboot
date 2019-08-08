@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "Rebooting Altair"
+ssh attbots.av.altair   sudo reboot 2>/dev/null
+ssh attbots.lynx.altair sudo reboot 2>/dev/null
+echo "Rebooting Deneb"
+ssh attbots.av.deneb    sudo reboot 2>/dev/null
+ssh attbots.lynx.deneb  sudo reboot 2>/dev/null
+echo "Rebooting Vega"
+ssh attbots.av.vega     sudo reboot 2>/dev/null
+ssh attbots.lynx.vega   sudo reboot 2>/dev/null
+

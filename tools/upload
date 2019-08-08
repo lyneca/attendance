@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "Syncing with Altair"
+scp -r $1 "attbots.av.altair:$2"
+scp -r $1 "attbot-altair:$2"
+echo "Syncing with Deneb"
+scp -r $1 "attbots.av.deneb:$2"
+scp -r $1 "attbot-deneb:$2"
+echo "Syncing with Vega"
+scp -r $1 "attbots.av.vega:$2"
+scp -r $1 "attbot-vega:$2"
