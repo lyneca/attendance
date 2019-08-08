@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 
 class Config:
     def __init__(self, logger):
@@ -22,7 +23,7 @@ class Config:
             json.dump({
                 'course': self.course,
                 'token': self.access_token
-            }
+            }, f)
 
     def update_config(self):
         """Pull config data from Firebase"""
