@@ -107,6 +107,7 @@ class Scanner:
             self.set_config(uid)
         else:
             if not self.has_config:
+                self.logger.warn("No configuration selected.")
                 self.logger.buzzer.setup_error()
                 time.sleep(1)
                 return None
