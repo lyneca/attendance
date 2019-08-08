@@ -43,8 +43,10 @@ def main():
 
     scanner = Scanner(config, logger)
 
-    handler = Handler(logger, config)
+    while not scanner.has_config:
+        scanner.scan()
 
+    handler = Handler(logger, config)
     handler.get_assignments()
 
     buzzer.setup_complete()
