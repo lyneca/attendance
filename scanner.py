@@ -16,7 +16,7 @@ class Scanner:
         self.rdr = RFID()
         self.logger = logger
         self.util = self.rdr.util()
-        self.util.debug = True
+        self.util.debug = False
         self.last_sid = 0
         self.last_time = 0
 
