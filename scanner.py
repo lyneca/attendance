@@ -113,6 +113,7 @@ class Scanner:
                 return None
             err, sid = self.scan_sid(uid)
             if err:
+                self.logger.buzzer.error()
                 return None
             self.logger.info("Found SID:", sid)
             if sid and (sid != self.last_sid or time.time() - self.last_time > 3):
