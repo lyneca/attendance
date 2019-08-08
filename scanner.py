@@ -26,7 +26,6 @@ class Scanner:
     def decode_number(self, data):
         return int(self.decode(data), 16)
 
-
     def request_tag(self):
         self.rdr.wait_for_tag()
         (error, _) = self.rdr.request()
@@ -90,6 +89,7 @@ class Scanner:
         self.config.course = course_id
         self.config.access_token = token
         self.has_config = True
+        self.logger.info(f"Set {course_name} as course")
         self.logger.buzzer.set_config()
         #  self.config.save()
 
