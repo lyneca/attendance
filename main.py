@@ -36,12 +36,12 @@ def main():
 
     config = Config(logger)
 
-    err = True
-    while err:
-        err = config.update_config()
-        sleep(3)
+    #  err = True
+    #  while err:
+        #  err = config.update_config()
+        #  sleep(3)
 
-    scanner = Scanner(logger)
+    scanner = Scanner(config, logger)
 
     handler = Handler(logger, config)
     handler.get_assignments()

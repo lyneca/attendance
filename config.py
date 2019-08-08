@@ -8,9 +8,21 @@ class Config:
         with open("/home/pi/secret") as secret_file:
             self.firebase_secret = secret_file.read().strip()
         self.logger = logger
-        self.server = ""
+        self.server = "https://canvas.sydney.edu.au/api/v1"
         self.course = ""
         self.access_token = ""
+
+    def save(self):
+        """This method may not be used, as it's better to force staff to scan
+        every time than mark people as attending for the wrong course"""
+
+        if not os.path.exists('/home/pi/config.json'):
+            open('/home/pi/config.json', 'x').close()
+        with open('/home/pi/config.json', 'w') as f:
+            json.dump({
+                'course': self.course,
+                'token': self.access_token
+            }
 
     def update_config(self):
         """Pull config data from Firebase"""

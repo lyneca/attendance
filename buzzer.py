@@ -47,6 +47,12 @@ class Buzzer:
         self.buzz(FREQ_MED)
         self.buzz(FREQ_HIGH)
 
+    def set_config(self):
+        """Called when the device has had its config set"""
+        self.buzz(FREQ_MED)
+        self.buzz(FREQ_MED)
+        self.buzz(FREQ_MED)
+
 
 if __name__ == '__main__':
     buzzer = Buzzer()
