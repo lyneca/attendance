@@ -28,6 +28,7 @@ class Handler:
                     self.config.course)).json()
                 if 'errors' in self.assignments:
                     self.logger.warn("Could not find any assignments")
+                    self.logger.buzzer.setup_error()
                     time.sleep(3)
                     continue
                 break
