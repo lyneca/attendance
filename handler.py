@@ -26,6 +26,10 @@ class Handler:
                 self.logger.info("Getting list of assignments")
                 self.assignments = self.get("/courses/{}/assignments?per_page=50".format(
                     self.config.course)).json()
+                if 'errors' in self.assignments:
+                    self.logger.warn("Could not find any assignments")
+                    time.sleep(3)
+                    continue
                 break
             except requests.exceptions.ConnectionError:
                 self.logger.error("Could not connect to Canvas")
@@ -37,8 +41,7 @@ class Handler:
         """Get the assignment corresponding to this date"""
         if not self.assignments:
             return None
-        #  date = datetime.now().isoformat().split("T")[0]
-        date = "2019-08-06"
+        date = datetime.now().isoformat().split("T")[0]
         aids = [
             x for x in self.assignments if "attendance" in x["name"].lower()
             and "due_at" in x

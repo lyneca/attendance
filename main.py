@@ -44,6 +44,7 @@ def main():
     scanner = Scanner(config, logger)
 
     handler = Handler(logger, config)
+
     handler.get_assignments()
 
     buzzer.setup_complete()
