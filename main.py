@@ -36,15 +36,15 @@ def main():
 
     config = Config(logger)
 
-    #  err = True
-    #  while err:
-        #  err = config.update_config()
-        #  sleep(3)
-
     scanner = Scanner(config, logger)
 
-    while not scanner.has_config:
+    # Loop until either config is successfully downloaded, or a config card is
+    #  scanned
+    err = True
+    while err and not scanner.has_config:
+        err = config.update_config()
         scanner.scan()
+        sleep(3)
 
     handler = Handler(logger, config)
     handler.get_assignments()
@@ -54,10 +54,14 @@ def main():
     logger.info("Ready")
 
     while True:
-        data = scanner.scan()
-        if data is None:
+        scanner.wait()
+        err, data = scanner.scan()
+        if err:
             continue
-        handler.send(data)
+        if data is True:
+            handler.get_assignments()
+        else:
+            handler.send(data)
 
 if __name__ == '__main__':
     main()

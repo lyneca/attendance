@@ -26,8 +26,10 @@ class Scanner:
     def decode_number(self, data):
         return int(self.decode(data), 16)
 
-    def request_tag(self):
+    def wait(self):
         self.rdr.wait_for_tag()
+
+    def request_tag(self):
         (error, _) = self.rdr.request()
         if error:
             self.logger.warn("Could not request tag")
@@ -97,29 +99,33 @@ class Scanner:
     def scan(self):
         """Attempt to scan a student card
 
-        Returns None if no card can be scanned.
+        Returns:
+            True, None: if no card can be scanned.
+            False, True: If a config card was scanned
+            False, [sid]: If a student card can be scanned
         """
 
         err, uid = self.request_tag()
         if err:
-            return None
+            return True, None
         if self.is_config_card(uid):
             self.set_config(uid)
+            return False, True
         else:
             if not self.has_config:
                 self.logger.warn("No configuration selected.")
                 self.logger.buzzer.setup_error()
                 time.sleep(1)
-                return None
+                return True, None
             err, sid = self.scan_sid(uid)
             if err:
                 self.logger.buzzer.error()
-                return None
+                return True, None
             self.logger.info("Found SID:", sid)
             if sid and (sid != self.last_sid or time.time() - self.last_time > 3):
                 self.last_sid = sid
                 self.last_time = time.time()
                 self.rdr.stop_crypto()
                 self.logger.buzzer.success()
-                return sid
+                return False, sid
             self.logger.warn("Scan collision")
