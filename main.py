@@ -38,13 +38,16 @@ def main():
 
     scanner = Scanner(config, logger)
 
+    buzzer.ready()
+
     # Loop until either config is successfully downloaded, or a config card is
     #  scanned
     err = True
     while err and not scanner.has_config:
-        err = config.update_config()
-        scanner.scan()
-        sleep(3)
+        err, _ = scanner.scan()
+        if err:
+            err = config.update_config()
+            sleep(3)
 
     handler = Handler(logger, config)
     handler.get_assignments()
