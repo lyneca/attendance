@@ -53,6 +53,11 @@ class Buzzer:
         self.buzz(FREQ_MED)
         self.buzz(FREQ_MED)
 
+    def ready(self):
+        """Called when the device initially boots"""
+        self.buzz(FREQ_LOW)
+        self.buzz(FREQ_LOW)
+
 
 if __name__ == '__main__':
     buzzer = Buzzer()
