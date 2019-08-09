@@ -9,9 +9,14 @@ class Config:
         with open("/home/pi/secret") as secret_file:
             self.firebase_secret = secret_file.read().strip()
         self.logger = logger
+        self.ready = False
         self.server = "https://canvas.sydney.edu.au/api/v1"
-        self.course = ""
+        self.course_name = ""
+        self.course_id = ""
         self.access_token = ""
+
+    def __repr__(self):
+        return f"<Config ({self.course_name},{self.course_id},{self.access_token})>"
 
     def save(self):
         """This method may not be used, as it's better to force staff to scan
@@ -21,7 +26,8 @@ class Config:
             open('/home/pi/config.json', 'x').close()
         with open('/home/pi/config.json', 'w') as f:
             json.dump({
-                'course': self.course,
+                'course_name': self.course_name,
+                'course_id': self.course_id,
                 'token': self.access_token
             }, f)
 
@@ -38,7 +44,8 @@ class Config:
             )
             config = response.json()['config']
             self.server = config['server']
-            self.course = config['course']
+            self.course_name = config['course_name']
+            self.course_id = config['course_id']
             self.access_token = config['token']
         except requests.exceptions.ConnectionError as err:
             self.logger.buzzer.setup_error()
@@ -52,4 +59,5 @@ class Config:
             self.logger.buzzer.setup_error()
             self.logger.error("Invalid response from Firebase:", err)
             return True
+        self.ready = True
         return False

@@ -43,7 +43,7 @@ def main():
     # Loop until either config is successfully downloaded, or a config card is
     #  scanned
     err = True
-    while err and not scanner.has_config:
+    while err and not config.ready:
         err, _ = scanner.scan()
         if err:
             err = config.update_config()

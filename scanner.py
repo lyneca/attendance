@@ -11,7 +11,6 @@ class Scanner:
         with open("/home/pi/usyd_key") as key_file:
             self.key = [ord(x) for x in key_file.read().strip()]
         self.config_key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
-        self.has_config = False
         self.config = config
         self.rdr = RFID()
         self.logger = logger
@@ -88,9 +87,10 @@ class Scanner:
             token_b.append(self.decode(data))
         token = f"{token_a}~{''.join(token_b)}"
 
-        self.config.course = course_id
+        self.config.course_id = course_id
+        self.config.course_name = course_name
         self.config.access_token = token
-        self.has_config = True
+        self.config.ready = True
         self.logger.info(f"Set {course_name} as course")
         self.logger.buzzer.set_config()
         #  self.config.save()
@@ -112,7 +112,7 @@ class Scanner:
             self.set_config(uid)
             return False, True
         else:
-            if not self.has_config:
+            if not self.config.ready:
                 self.logger.warn("No configuration selected.")
                 self.logger.buzzer.setup_error()
                 time.sleep(1)

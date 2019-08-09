@@ -25,7 +25,7 @@ class Handler:
             try:
                 self.logger.info("Getting list of assignments")
                 self.assignments = self.get("/courses/{}/assignments?per_page=50".format(
-                    self.config.course)).json()
+                    self.config.course_id)).json()
                 if 'errors' in self.assignments:
                     self.logger.warn("Could not find any assignments")
                     self.logger.buzzer.setup_error()
@@ -62,7 +62,7 @@ class Handler:
         if aid:
             url = self.config.server + \
                 "/courses/{}/assignments/{}/submissions/sis_user_id:{}".format(
-                    self.config.course, aid, sid
+                    self.config.course_id, aid, sid
                 )
             response = requests.put(
                 url, "submission[posted_grade]=1", headers=self.get_headers())
