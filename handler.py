@@ -27,7 +27,7 @@ class Handler:
                 assignments = self.get("/courses/{}/assignments?per_page=50".format(
                     self.config.course_id)).json()
                 if 'errors' in assignments:
-                    self.logger.warn("Could not find any assignments: {assignments['errors']}")
+                    self.logger.warn(f"Could not find any assignments: {assignments['errors']}")
                     self.logger.buzzer.setup_error()
                     time.sleep(3)
                     continue
