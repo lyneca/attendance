@@ -24,13 +24,14 @@ class Handler:
         while True:
             try:
                 self.logger.info("Getting list of assignments")
-                self.assignments = self.get("/courses/{}/assignments?per_page=50".format(
+                assignments = self.get("/courses/{}/assignments?per_page=50".format(
                     self.config.course_id)).json()
                 if 'errors' in self.assignments:
-                    self.logger.warn("Could not find any assignments")
+                    self.logger.warn("Could not find any assignments: {assignments['errors']}")
                     self.logger.buzzer.setup_error()
                     time.sleep(3)
                     continue
+                self.assignments = assignments
                 break
             except requests.exceptions.ConnectionError:
                 self.logger.error("Could not connect to Canvas")
