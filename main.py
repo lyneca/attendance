@@ -52,8 +52,6 @@ def main():
     handler = Handler(logger, config)
     handler.get_assignments()
 
-    buzzer.setup_complete()
-
     logger.info("Ready")
 
     while True:

@@ -37,6 +37,7 @@ class Handler:
                 self.logger.error("Could not connect to Canvas")
                 time.sleep(3)
                 continue
+        self.logger.buzzer.setup_complete()
         self.logger.info("Successfully requested assignment list")
 
     def get_aid(self):
