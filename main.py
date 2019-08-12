@@ -47,7 +47,6 @@ def main():
         err, _ = scanner.scan()
         if err:
             err = config.update_config()
-            sleep(3)
 
     handler = Handler(logger, config)
     handler.get_assignments()
