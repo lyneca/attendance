@@ -17,7 +17,7 @@ class Scanner:
         self.util = self.rdr.util()
         self.util.debug = False
         self.last_sid = 0
-        self.last_time = 0
+        self.last_scan = 0
 
     def decode(self, data):
         return ''.join([chr(x) for x in data])
@@ -109,6 +109,8 @@ class Scanner:
         if err:
             return True, None
         if self.is_config_card(uid):
+            if time.time() - self.last_scan > 1:
+                return True, None
             self.set_config(uid)
             return False, True
         else:
@@ -117,14 +119,16 @@ class Scanner:
                 self.logger.buzzer.setup_error()
                 time.sleep(1)
                 return True, None
+            if time.time() - self.last_scan > 1:
+                return True, None
             err, sid = self.scan_sid(uid)
             if err:
                 self.logger.buzzer.error()
                 return True, None
             self.logger.info("Found SID:", sid)
-            if sid and (sid != self.last_sid or time.time() - self.last_time > 3):
+            if sid and (sid != self.last_sid or time.time() - self.last_scan > 2):
                 self.last_sid = sid
-                self.last_time = time.time()
+                self.last_scan = time.time()
                 self.rdr.stop_crypto()
                 self.logger.buzzer.success()
                 return False, sid
