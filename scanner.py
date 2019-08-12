@@ -87,8 +87,6 @@ class Scanner:
             token_b.append(self.decode(data))
         token = f"{token_a}~{''.join(token_b)}"
 
-        self.last_scan = time.time()
-
         self.config.course_id = course_id
         self.config.course_name = course_name
         self.config.access_token = token
