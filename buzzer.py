@@ -3,7 +3,7 @@ import time
 #pylint: disable=import-error
 import RPi.GPIO as GPIO
 
-PIN = 3
+PIN = 15
 FREQ_LOW = 400
 FREQ_MED = 600
 FREQ_HIGH = 800
@@ -16,7 +16,7 @@ class Buzzer:
     def __init__(self):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(PIN, GPIO.OUT)
-        self.buzzer = GPIO.PWM(3, FREQ_LOW)
+        self.buzzer = GPIO.PWM(15, FREQ_LOW)
 
     def buzz(self, freq):
         self.buzzer.ChangeFrequency(freq)
