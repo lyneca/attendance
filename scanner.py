@@ -129,3 +129,4 @@ class Scanner:
                 self.logger.buzzer.success()
                 return False, sid
             self.logger.warn("Scan collision")
+            return True, None
