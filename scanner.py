@@ -53,7 +53,7 @@ class Scanner:
         return False, self.decode(data).strip()
 
     def is_config_card(self, uid):
-        if self.rdr.card_auth(self.rdr.auth_b, 1, self.config_key, uid):
+        if self.rdr.card_auth(self.rdr.auth_a, 1, self.config_key, uid):
             self.logger.warn("Could not authenticate")
             self.rdr.stop_crypto()
             return False
@@ -65,7 +65,7 @@ class Scanner:
         return data == "CONFIG CARD"
 
     def set_config(self, uid):
-        self.util.auth(self.rdr.auth_b, self.config_key)
+        self.util.auth(self.rdr.auth_a, self.config_key)
         self.util.do_auth(2)
         err, block_one = self.rdr.read(2)
         if err:
