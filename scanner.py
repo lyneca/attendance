@@ -43,18 +43,16 @@ class Scanner:
         return False, uid
 
     def scan_sid(self, uid):
-        if self.rdr.card_auth(self.rdr.auth_a, 12, self.key, uid):
-            self.logger.warn("Could not authenticate")
-            self.rdr.stop_crypto()
+        if self.util.do_auth(12):
+            self.logger.warn("Could not authenticate (checking for SID)")
             return True, None
         self.logger.silly("Authenticated")
         err, data = self.rdr.read(12)
         return False, self.decode(data).strip()
 
     def is_config_card(self, uid):
-        if self.rdr.card_auth(self.rdr.auth_a, 1, self.key, uid):
-            self.logger.warn("Could not authenticate")
-            self.rdr.stop_crypto()
+        if self.util.do_auth(1):
+            self.logger.warn("Could not authenticate (checking for config)")
             return False
         err, data = self.rdr.read(1)
         if err:
@@ -64,7 +62,6 @@ class Scanner:
         return data == "CONFIG CARD"
 
     def set_config(self, uid):
-        self.util.auth(self.rdr.auth_a, self.key)
         self.util.do_auth(2)
         err, block_one = self.rdr.read(2)
         if err:
@@ -106,25 +103,38 @@ class Scanner:
 
         err, uid = self.request_tag()
         if err:
+            self.logger.warn("Could not request tag")
             return True, None
-        if self.is_config_card(uid):
+
+        err = self.util.auth(self.rdr.auth_a, self.key)
+
+        if err:
+            self.logger.warn("Could not authenticate")
+            return True, None
+
+        err, sid = self.scan_sid(uid)
+
+        if err:
+            self.logger.warn("Could not scan sector 12")
+            return True, None
+
+        if sid == "CONFIG CARD":
+            self.logger.info("Found config card")
             self.set_config(uid)
+            self.util.deauth()
             return False, True
         else:
+            self.logger.info("Not config card")
             if not self.config.ready:
                 self.logger.warn("No configuration selected.")
                 self.logger.buzzer.setup_error()
                 time.sleep(1)
-                return True, None
-            err, sid = self.scan_sid(uid)
-            if err:
-                self.logger.buzzer.error()
+                self.util.deauth()
                 return True, None
             self.logger.info("Found SID:", sid)
             if sid and (sid != self.last_sid or time.time() - self.last_time > 3):
                 self.last_sid = sid
                 self.last_time = time.time()
-                self.rdr.stop_crypto()
                 self.logger.buzzer.success()
                 return False, sid
             self.logger.warn("Scan collision")
