@@ -11,6 +11,9 @@ KEY_B = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
 def hexize(string):
     return [ord(x) for x in string]
 
+with open("/home/pi/usyd_key") as key_file:
+    key = [ord(x) for x in key_file.read().strip()]
+
 course_code = input("Enter the course code: ")
 course_id = hex(int(input("Enter the course ID: ")))[2:]
 token = input("Enter your token: ")
@@ -23,12 +26,15 @@ blocks = [
     None,
     hexize(f'{"CONFIG CARD": <16}'),
     hexize(f'{course_code: >8}{course_id:0>4}{token_a:0>4}'),
-    None,
+    key + [None,None,None,None,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF],
     hexize(token_b[:16]),
     hexize(token_b[16:32]),
     hexize(token_b[32:48]),
+    key + [None,None,None,None,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF],
+    hexize(token_b[48:]),
     None,
-    hexize(token_b[48:])
+    None,
+    key + [None,None,None,None,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF],
 ]
 
 print(blocks)
