@@ -10,7 +10,6 @@ class Scanner:
     def __init__(self, config, logger):
         with open("/home/pi/usyd_key") as key_file:
             self.key = [ord(x) for x in key_file.read().strip()]
-        self.config_key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
         self.config = config
         self.rdr = RFID()
         self.logger = logger
@@ -53,7 +52,7 @@ class Scanner:
         return False, self.decode(data).strip()
 
     def is_config_card(self, uid):
-        if self.rdr.card_auth(self.rdr.auth_a, 1, self.config_key, uid):
+        if self.rdr.card_auth(self.rdr.auth_a, 1, self.key, uid):
             self.logger.warn("Could not authenticate")
             self.rdr.stop_crypto()
             return False
@@ -65,7 +64,7 @@ class Scanner:
         return data == "CONFIG CARD"
 
     def set_config(self, uid):
-        self.util.auth(self.rdr.auth_a, self.config_key)
+        self.util.auth(self.rdr.auth_a, self.key)
         self.util.do_auth(2)
         err, block_one = self.rdr.read(2)
         if err:
