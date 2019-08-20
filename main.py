@@ -44,6 +44,7 @@ def main():
     #  scanned
     err = True
     while err and not config.ready:
+        buzzer.ready()
         err, _ = scanner.scan()
         if err:
             err = config.update_config()

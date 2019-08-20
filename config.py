@@ -52,7 +52,6 @@ class Config:
             self.logger.error("Could not connect to server:", err)
             return True
         except KeyError as err:
-            self.logger.buzzer.setup_error()
             self.logger.error("Could not obtain setup data:", err)
             return True
         except json.JSONDecodeError as err:
